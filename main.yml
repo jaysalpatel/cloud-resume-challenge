@@ -12,11 +12,11 @@ jobs:
     - name Configure AWS credentials
       uses: aws-actions/configure-aws-credentials
       with:
-        aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-secret-key: ${{ secrets.AWS_SECRET_KEY_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ACCESS_KEY }}
         region: us-east-1
         
     - name: Deploy HTML site to S3 bucket
-      run: aws s3 sync ./ s3://cloud-resume-challenge-jaysal --delete --acl public-read --follow-symlinks --exclude ".git*/*"
+      run: aws s3 sync ./frontend s3://cloud-resume-challenge-jaysal --delete --acl public-read --follow-symlinks --exclude ".git*/*"
     - name: Invalidate CloudFront Distribution
       run: aws cloudfront create-invalidation --distribution-id GKER342KYTV --paths "/*"
