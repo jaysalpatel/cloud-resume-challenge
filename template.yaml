@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 
+  Cloud Resume Challenge backend stack
+ Globals:
+  Api:
+    Cors:
+      AllowMethods: "'GET, DELETE, HEAD, POST, PUT, OPTIONS, PATCH'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: cloud-resume-challenge-jaysal
+  VisitorCounterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: visitorcounter/
+      Handler: visitorcounter.handler **fix
+      Runtime: python3.8
+      MemorySize: 128 
+      Policies: AmazonDynamoFullAccess
+      Events: 
+        UpdateCount:
+          Type: Api
+          Properties:
+            Path: /Prod
+            Method: get
+            
+Resources:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    AttributeDefinitions:
+      - AttributeName: visitorcounter
+      - AttributeType: vc
+    KeySchema:
+      - AttributeName: visitorcounter
+      - AttributeType: vc
+    ProvisionedThroughPut:
+      ReadCapacityUnits: 5
+      WriteCapacityUnits: 5
+    TableName: visitorcounter
+    Policies:
+        - Version: '2012-10-17'
+          Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:fullaccess
+Outputs:
+  visitorcounterapi:
+    Description: "API gateway endpoint URL for the production stage for my visitor count function"
+    Value: !Sub "https://${RestAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/visitorcounter/"
+  
