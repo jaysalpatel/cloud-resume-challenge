@@ -27,7 +27,7 @@ resource "aws_s3_bucket" "cloud-resume-challenge-jaysalpatel" {
 
 resource "aws_dynamodb_table" "visitorcounter" {
     name = "visitorcounter"
-    billing_mode = "PROVISIONED"
+    billing_mode = "PAY_PER_REQUEST"
     read_capacity = 5
     write_capacity = 5
     hash_key = "visitorcounter"
